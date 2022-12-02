@@ -1,32 +1,19 @@
-from types import SimpleNamespace
-
-def process_line(input, v):
-
-    if len(input):
-        v.current_cal += int(input)
-    else:
-        # Indicates an empty line, reset counters
-        if v.current_cal > v.max_cal:
-            v.max_cal = v.current_cal
-            v.max_id = v.current_id
-        v.current_cal = 0
-        v.current_id += 1
-
+F = './day_01/puzzle.dat'
 
 def main():
-    v = SimpleNamespace(**{
-        'current_cal': 0,
-        'current_id': 0,
-        'max_cal': -1,
-        'max_id': -1
-        })
+    res = [0]
 
+    for l in [int(l.strip()) if len(l.strip()) else 0 for l in open(F)]:
+        if l == 0:
+            res.append(0)
+        res[-1] += l
 
-    with open('./day_01/puzzle.dat') as f:
-        [process_line(ln.strip(), v) for ln in f]
-
-    return f'{v.max_id} - {v.max_cal}'
+    return max(res)
 
 
 if __name__ == '__main__':
-    print(main())
+    answer = main()
+    assert answer == 66487
+    print(answer)
+
+# 66487

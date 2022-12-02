@@ -1,25 +1,20 @@
-from types import SimpleNamespace
-
-def process_line(input, v):
-    if len(input):
-        v.total_cal += int(input)
-    else:
-        v.cals.append(v.total_cal)
-        v.total_cal = 0
+F = './day_01/puzzle.dat'
 
 def main():
-    v = SimpleNamespace(**{
-        'cals': [],
-        'total_cal': 0
-    })
+    res = [0]
 
-    with open('./day_01/puzzle.dat') as f:
-        [process_line(ln.strip(), v) for ln in f]
+    for l in [int(l.strip()) if len(l.strip()) else 0 for l in open(F)]:
+        if l == 0:
+            res.append(0)
+        res[-1] += l
 
-    v.cals.sort()
-
-    return sum(v.cals[-3:])
+    return sum(sorted(res)[-3:])
 
 
 if __name__ == '__main__':
-    print(main())
+    answer = main()
+    assert answer == 197301
+    print(answer)
+
+
+# 197301
