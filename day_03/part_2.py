@@ -1,6 +1,6 @@
 F = './day_03/puzzle.dat'
 
-priority = '0abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+from string import ascii_letters
 
 def main():
     total = 0
@@ -9,7 +9,7 @@ def main():
         group.append(set(rk))
 
         if i % 3 == 2: # Compute and reset every thrid item
-            total += priority.find((group[0] & group[1] & group[2]).pop())
+            total += ascii_letters.index((group[0] & group[1] & group[2]).pop()) + 1
             group = []
 
     return total
