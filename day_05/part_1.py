@@ -35,10 +35,9 @@ def parse_input():
 
 def main():
     stacks, instructions = parse_input()
-
-    for qty, src, dst in instructions:
-        for _ in range(qty):
-            stacks[dst].append(stacks[src].pop())
+    [[stacks[dst].append(stacks[src].pop())
+        for _ in range(qty)]
+            for qty, src, dst in instructions]
 
     return ''.join([x[-1] for x in stacks])
 
