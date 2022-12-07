@@ -1,30 +1,25 @@
 # F = './day_07/test.dat'
 F = './day_07/puzzle.dat'
 
+ROOT = '/'
+
 def main():
     tree = {
-        '/': 0
+        ROOT: 0
     }
-    path = '/'
+    path = ROOT
 
     for l in [l.strip() for l in open(F)]:
-        if l[0:4] == '$ cd':
-            chdir = l.split(' ')[-1]
-            if chdir == '..':
-                path = '-'.join(path.split('-')[0:-1]) if len(path) > 1 else '/' # Move up one level unless already at the top of the path
-            else: # move one down
-                path = path + f'-{chdir}' if chdir != '/' else '/'
-
-        elif l[0:3] == 'dir':
-            tree.setdefault(path + f'-{l.split(" ")[-1]}', 0)
-
-        elif l[0:4] == '$ ls':
-            continue
-
-        else:  # Anythin else is a file
-            tree[path] += (size := int(l.split(' ')[0]))
-            for i in range(path.count('-')):
-                tree['-'.join(path.split('-')[0:i+1])] += size
+        match l.split():
+            case '$', 'cd', '/'  : path = ROOT
+            case '$', 'cd', '..' : path = '-'.join(path.split('-')[0:-1]) if path != ROOT else ROOT
+            case '$', 'cd', chdir: path = path + f'-{chdir}' if chdir != ROOT else ROOT
+            case '$', 'ls'       : pass
+            case 'dir', new_dir  : tree.setdefault(path + f'-{new_dir}', 0)
+            case size, _:
+                tree[path] += int(size)
+                for i in range(path.count('-')):
+                    tree['-'.join(path.split('-')[0:i+1])] += int(size)
 
     return sum(i for i in tree.values() if i <= 100000)
 
