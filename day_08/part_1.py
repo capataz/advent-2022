@@ -1,3 +1,5 @@
+import numpy as np
+
 # F = './day_08/test.dat'
 F = './day_08/puzzle.dat'
 
@@ -5,7 +7,7 @@ def main():
     rows = [[int(i) for i in l.strip()] for l in open(F)]
     t_rows = list(map(list, zip(*rows)))
 
-    visible = [[0] * len(rows[0]) for _ in range(len(rows))]
+    visible = np.zeros_like(rows, int)
 
     for i, row in enumerate(t_rows):
         for j, tree in enumerate(row):
