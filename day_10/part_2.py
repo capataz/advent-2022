@@ -1,20 +1,18 @@
 import numpy as np
 
-F = './day_10/test.dat'
-# F = './day_10/puzzle.dat'
+# F = './day_10/test.dat'
+F = './day_10/puzzle.dat'
 
 
 def draw_pixel(cycle, sig, screen):
-    row = int((cycle - 1) / 40)
-    rel_cycle = (cycle - 1) % 40
-
-    if rel_cycle in range(sig - 1, sig + 2):
-        screen[row][rel_cycle] = '@'
+    if (c:= cycle % 40) in range(sig - 1, sig + 2):
+        screen[int(cycle / 40)][c] = '@'
 
 
 def main():
     screen = np.full((6, 40), ' ')
-    sig = cycle = 1
+    cycle = 0
+    sig = 1
     for l in open(F):
         match l.strip().split():
             case 'addx', ins:
