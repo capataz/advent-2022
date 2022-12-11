@@ -2,8 +2,8 @@ import operator
 from collections import deque
 import numpy as np
 
-F = './day_11/test.dat'
-# F = './day_11/puzzle.dat'
+# F = './day_11/test.dat'
+F = './day_11/puzzle.dat'
 
 monkeys = {}
 
@@ -27,6 +27,7 @@ def generate_op(op, val):
 
 def main():
     current_monkey = 0
+    lcm = 1
     for l in open(F):
         match l.strip().split():
             case 'Monkey', id:
@@ -37,6 +38,7 @@ def main():
                 monkeys[current_monkey]['op'] = generate_op(op, val)
             case 'Test:', 'divisible', 'by', val:
                 monkeys[current_monkey]['div'] = int(val)
+                lcm *= int(val)
             case 'If', 'true:', 'throw', 'to', 'monkey', target:
                 monkeys[current_monkey]['true_target'] = int(target)
             case 'If', 'false:', 'throw', 'to', 'monkey', target:
@@ -46,25 +48,22 @@ def main():
 
     inspection_counts = np.zeros(len(monkeys.keys()))
 
-    for xx in range(10000):
+    for _ in range(10000):
         for i, mon in monkeys.items():
             while len(mon['items']) > 0:
                 inspection_counts[i] += 1  # Count a monkey inspections
 
-                item = mon['op'](int(mon['items'].popleft()))
+                item = int(mon['op'](int(mon['items'].popleft())))
+                item = item % lcm    # Well, I had to look this trick up. I had congruence and modulo aritmatic, just failed the lcm
 
                 target = mon['false_target'] if item % mon['div'] else mon['true_target']
                 monkeys[target]['items'].append(item)
-
-        if xx in [0, 19, 999, 1999, 2999, 3999, 4999, 5999, 6999, 7999, 8999, 9999]:
-            print(f'ROUND---------{xx + 1}')
-            print(inspection_counts)
 
     return int(np.prod(sorted(inspection_counts)[-2:]))
 
 if __name__ == '__main__':
     answer = main()
     print(answer)
-    assert answer == 102399
+    assert answer == 23641658401
 
-# 102399
+# 23641658401
